@@ -1,7 +1,7 @@
 # KROK-Java-Course-work
 Final project for online Java Core course provided by KROK
 
-toDo:
+- toDo:
     -Обеспечить обработку исключений, логирование, тестирование
     -Доп. задание:
         -Импорт/Экспорт таблиц с помощью аннотаций
