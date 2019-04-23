@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +60,19 @@ public final class BusinessLogic {
         BusinessLogic.insertAll(tmp);
     }
 
-    public static void exportToXML(File file) throws Exception {
+    public static int exportToXML(File file) {
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         BusinessLogic.exportFromDB();
-        xmlMapper.writeValue(file, employees);
+        try {
+            xmlMapper.writeValue(file, employees);
+        } catch (IOException e) {
+            return -1;
+        }
+        return 0;
     }
 
-    public static void insert(String name, String job, int age, double salary, int afID){
+    public static int insert(String name, String job, int age, double salary, int afID){
         try {
             preparedStatement = connection.prepareStatement("INSERT INTO Employees (name, job, age, salary, afID)" +
                     "VALUES (?, ?, ?, ?, ?)");
@@ -78,11 +84,12 @@ public final class BusinessLogic {
             preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            return -1;
         };
+        return 0;
     }
 
-    public static void insert(Employee employee){
+    public static int insert(Employee employee){
         try {
             preparedStatement = connection.prepareStatement("SELECT * FROM Employees WHERE id = ?");
             preparedStatement.setInt(1, employee.getId());
@@ -100,11 +107,12 @@ public final class BusinessLogic {
                 preparedStatement.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            return -1;
         }
+        return 0;
     }
 
-    public static void insert(String phone, String adress) {
+    public static int insert(String phone, String adress) {
         try {
             preparedStatement = connection.prepareStatement("INSERT INTO AdditionalInfo (phone, adress) " +
                                                                                             "VALUES (?, ?)");
@@ -113,12 +121,12 @@ public final class BusinessLogic {
             preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            return -1;
         }
-
+        return 0;
     }
 
-    public static void insert(AdditionalInfo additionalInfo) {
+    public static int insert(AdditionalInfo additionalInfo) {
         try {
             preparedStatement = connection.prepareStatement("SELECT * FROM AdditionalInfo WHERE id = ?");
             preparedStatement.setInt(1, additionalInfo.getId());
@@ -133,23 +141,64 @@ public final class BusinessLogic {
             }
             preparedStatement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            return -1;
         }
-
+        return 0;
     }
 
-    public static void oneToMany(int id, int afID) {
+    static int deleteEmployee(int id) {
         try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM AdditionalInfo WHERE employeeID = ?");
-            preparedStatement.setInt(1, afID);
-            ResultSet rsAI = preparedStatement.executeQuery();
-            if (rsAI.next()) {
-                rsAI.beforeFirst();
-                preparedStatement = connection.prepareStatement("UPDATE Employees SET afID = ? WHERE id = ?");
-                preparedStatement.setInt(1, afID);
-                preparedStatement.setInt(2, id);
-                preparedStatement.executeUpdate();
+            BusinessLogic.bindEmployeeToAdditionalInfo(id, 0);
+            preparedStatement = connection.prepareStatement("DELETE FROM Employees WHERE id = ?");
+            preparedStatement.setInt(1, id);
+            int result = preparedStatement.executeUpdate();
+            preparedStatement.close();
+            BusinessLogic.deleteAdditionalInfo(id);
+        } catch (SQLException e) {
+            return -1;
+        }
+        return 0;
+    }
+
+    static int deleteAdditionalInfo(int id) {
+        try {
+            preparedStatement = connection.prepareStatement("DELETE FROM AdditionalInfo WHERE id = ?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            return -1;
+        }
+        return 0;
+    }
+
+    public static Employee getEmployeeById(int id){
+        BusinessLogic.exportFromDB();
+        List<Employee> tmp = employees.getEmployees();
+        for (Employee e : tmp) {
+            if (e.getId() == id) {
+                return e;
             }
+        }
+        return null;
+    }
+
+    public static AdditionalInfo getAdditionalInfoById(int id) {
+        BusinessLogic.exportFromDB();
+        for (AdditionalInfo a : additionalInfoList) {
+            if (a.getId() == id) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public static void bindEmployeeToAdditionalInfo(int id, int afID) {
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE Employees SET afID = ? WHERE id = ?");
+            preparedStatement.setInt(1, afID);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -179,7 +228,21 @@ public final class BusinessLogic {
         }
     }
 
-    public static Employees searchByPhone(String phone) {
+    public static String viewAll() {
+        BusinessLogic.exportFromDB();
+        StringBuilder sb = new StringBuilder();
+        List<Employee> tmp = employees.getEmployees();
+        for (Employee e : tmp) {
+            sb.append(e.toString());
+            if (e.getAfID() != 0) {
+                sb.append(BusinessLogic.getAdditionalInfoById(e.getAfID()).toString());
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    public static Employees searchEmployeeByPhone(String phone) {
         Employees tmp;
         try {
             preparedStatement = connection.prepareStatement(
@@ -195,7 +258,7 @@ public final class BusinessLogic {
             tmp = new Employees(rs);
             preparedStatement.close();
         } catch (SQLException e) {
-            throw new RuntimeException("searchByPhone");
+            throw new RuntimeException("searchEmployeeByPhone");
         }
         return tmp;
     }

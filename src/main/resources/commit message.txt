@@ -1,0 +1,11 @@
+Add "Insert" option to UI
+
+Add "Specify" option to UI
+
+Add "Delete" option to UI
+
+Add "Search" by phone option to UI
+
+Add "View all" option to UI
+
+Add "Export to XML" option to UI

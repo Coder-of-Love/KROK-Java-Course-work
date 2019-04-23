@@ -59,6 +59,11 @@ final class Employees implements Serializable {
 
     @Override
     public String toString() {
-        return this.getEmployees().toString();
+        StringBuilder sb = new StringBuilder();
+        for (Employee e : this.employees) {
+            sb.append(e.toString());
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }

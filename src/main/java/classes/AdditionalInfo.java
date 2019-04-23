@@ -41,6 +41,6 @@ final class AdditionalInfo {
 
     @Override
     public String toString() {
-        return "id: " + id + " phone: " + phone + " adress: " + adress;
+        return " phone: " + phone + " adress: " + adress;
     }
 }

@@ -1,5 +1,6 @@
 package classes;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -21,6 +22,29 @@ public class UserInterface {
                     break;
                 case "1":
                 case "insert":
+                    userInsert();
+                    break;
+                case "2":
+                case "specify":
+                    userSpecify();
+                    break;
+                case "3":
+                case "delete":
+                    userDelete();
+                    break;
+                case "4":
+                case "phone":
+                    userSearchByPhone();
+                    break;
+                case "6":
+                case "all":
+                    userViewAll();
+                    break;
+                case "7":
+                case "xml":
+                    userExportToXML();
+                    break;
+
             }
         }
 
@@ -30,9 +54,75 @@ public class UserInterface {
         System.out.println("Введите команду..");
         System.out.println("0 или exit для выхода");
         System.out.println("1 или insert для добавления сотрудника");
-        System.out.println("2 или delete для удаления сотрудника");
-        System.out.println("3 или search для поиска сотрудника по номеру телефона");
-        System.out.println("4 или stats для вывода статистике по зарплатам");
+        System.out.println("2 или specify для добавления дополнительной информации о сотруднике");
+        System.out.println("3 или delete для удаления сотрудника по id");
+        System.out.println("4 или phone для поиска сотрудника по номеру телефона");
+        System.out.println("5 или stats для вывода статистике по зарплатам");
+        System.out.println("6 или all для просмотра всех сотрудников");
+        System.out.println("7 или xml для экспорта данных бд в файл \"employees.xml\"");
+    }
+
+    private static void userInsert() {
+        System.out.println("Через пробел введите id, имя, должность, возраст, зарплату и afID");
+        int resIns = BusinessLogic.insert(new Employee(new Scanner(System.in).nextLine()));
+        if (resIns == 0) {
+            System.out.println("Сотрудник успешно добавлен!");
+        } else {
+            System.out.println("Сотрудник не был добавлен! Смотрите подробности в логе..");
+        }
+    }
+
+    private static void userSpecify() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите id сотрудника для которого хотите добавить дополнительную информацию..");
+        int id = scanner.nextInt();
+        Employee employee = BusinessLogic.getEmployeeById(id);
+        int afID = employee.getAfID();
+        if (afID == 0) {
+            afID = id;
+            System.out.println("Введите телефон сотрудника..");
+            String phone = scanner.nextLine();
+            System.out.println("Введите адрес сотрудника..");
+            String adress = scanner.nextLine();
+            int resSpec = BusinessLogic.insert(new AdditionalInfo(afID, phone, adress));
+            if (resSpec == 0) {
+                BusinessLogic.bindEmployeeToAdditionalInfo(id, afID);
+                System.out.println("Информация о сотруднике успешно дополнена!");
+            }
+            else {
+                System.out.println("Информация не была добавлена! Смотрите подробности в логе..");
+            }
+        } else {
+            System.out.println("О сотруднике уже есть доп. информация!");
+        }
+    }
+
+    private static void userDelete() {
+        System.out.println("Введите id сотрудника которого хотите удалить..");
+        int resDel = BusinessLogic.deleteEmployee(new Scanner(System.in).nextInt());
+        if (resDel == 0) {
+            System.out.println("Сотрудник успешно удален!");
+        } else {
+            System.out.println("При удалении произошла ошибка! Смотрите подробности в логе..");
+        }
+    }
+
+    private static void userSearchByPhone() {
+        System.out.println("Введите номер телефона сотрудника которого хотите найти..");
+        System.out.println(BusinessLogic.searchEmployeeByPhone(new Scanner(System.in).nextLine()));
+    }
+
+    private static void userViewAll() {
+        System.out.println(BusinessLogic.viewAll());
+    }
+
+    private static void userExportToXML(){
+        int resExp = BusinessLogic.exportToXML(new File("employees.xml"));
+        if (resExp == 0) {
+            System.out.println("Данные успешно экспортированы!");
+        } else {
+            System.out.println("При экспорте произошла ошибка! Смотрите подробности в логе..");
+        }
     }
 
 }
