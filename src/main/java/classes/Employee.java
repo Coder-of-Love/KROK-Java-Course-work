@@ -4,12 +4,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name="employee")
+@XmlRootElement
 public class Employee implements Serializable{
     private int id;
     private String name;
@@ -41,87 +39,32 @@ public class Employee implements Serializable{
         }
     }
 
-
-    public static List<Employee> listFromResultSet(ResultSet rs) throws SQLException {
-        List<Employee> tmp = new ArrayList<>();
-        while (rs.next()){
-            int id = rs.getInt("id");
-            String name = rs.getString("name");
-            String job = rs.getString("job");
-            int age = rs.getInt("age");
-            double salary = rs.getDouble("salary");
-            int afID = rs.getInt("afID");
-            tmp.add(new Employee(id, name, job, age, salary, afID));
-        }
-        return tmp;
-    }
-
-    public static List<Employee> listFromTXT(File file) {
-        List<Employee> res = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Employee tmp = new Employee(line);
-                if (tmp.id != -1) {
-                    res.add(tmp);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
-    }
-
-    @XmlAttribute
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @XmlElement
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @XmlElement
-    public void setJob(String job) {
-        this.job = job;
-    }
-
-    @XmlElement
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    @XmlElement
-    public void setSalary(double salary) {
-        this.salary = salary;
-    }
-
-    @XmlElement
-    public void setAfID(int afID) {
-        this.afID = afID;
-    }
-
     public int getId() {
         return id;
     }
 
+    @XmlElement
     public String getName() {
         return name;
     }
 
+    @XmlElement
     public String getJob() {
         return job;
     }
 
+    @XmlElement
     public int getAge() {
         return age;
     }
 
+    @XmlElement
     public double getSalary() {
         return salary;
     }
 
+    @XmlElement
     public int getAfID() {
         return afID;
     }

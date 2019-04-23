@@ -1,66 +1,66 @@
-<ArrayList>
-  <item>
+<Employees>
+  <Employee>
     <id>1</id>
     <name>test</name>
     <job>tj</job>
     <age>5</age>
     <salary>100.0</salary>
     <afID>1</afID>
-  </item>
-  <item>
+  </Employee>
+  <Employee>
     <id>2</id>
     <name>test2</name>
     <job>tj2</job>
     <age>4</age>
     <salary>111.0</salary>
     <afID>2</afID>
-  </item>
-  <item>
+  </Employee>
+  <Employee>
     <id>3</id>
     <name>testIns</name>
     <job>tj</job>
     <age>11</age>
     <salary>123.45</salary>
     <afID>3</afID>
-  </item>
-  <item>
+  </Employee>
+  <Employee>
     <id>4</id>
     <name>testIns</name>
     <job>tj</job>
     <age>11</age>
     <salary>123.45</salary>
     <afID>0</afID>
-  </item>
-  <item>
+  </Employee>
+  <Employee>
     <id>55</id>
     <name>testEmp</name>
     <job>qs</job>
     <age>111</age>
     <salary>0.55</salary>
     <afID>0</afID>
-  </item>
-  <item>
+  </Employee>
+  <Employee>
     <id>56</id>
     <name>testEmp2</name>
     <job>qs</job>
     <age>111</age>
     <salary>0.55</salary>
     <afID>0</afID>
-  </item>
-  <item>
+  </Employee>
+  <Employee>
     <id>111</id>
     <name>txtEmp1</name>
     <job>job1</job>
     <age>22</age>
     <salary>10.0</salary>
     <afID>0</afID>
-  </item>
-  <item>
+  </Employee>
+  <Employee>
     <id>112</id>
     <name>txtEmp2</name>
     <job>job2</job>
     <age>23</age>
     <salary>11.0</salary>
     <afID>0</afID>
-  </item>
-</ArrayList>
+  </Employee>
+</Employees>

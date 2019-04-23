@@ -28,7 +28,7 @@ public final class BusinessLogic {
     private static Statement statement;
     private static PreparedStatement preparedStatement;
 
-    public static List<Employee> employeeList = new ArrayList<>();
+    public static Employees employees;
     public static List<AdditionalInfo> additionalInfoList = new ArrayList<>();
 
     //___While connected___
@@ -36,7 +36,7 @@ public final class BusinessLogic {
         try {
             statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM Employees");
-            employeeList = Employee.listFromResultSet(rs);
+            employees = new Employees(rs);
 
             rs = statement.executeQuery("SELECT * FROM AdditionalInfo");
             additionalInfoList = AdditionalInfo.listFromResultSet(rs);
@@ -47,23 +47,23 @@ public final class BusinessLogic {
         }
     }
 
-    public static void insertAll(List<Employee> list) {
-        for (Employee e : list) {
+    public static void insertAll(Employees employees) {
+        List<Employee> tmp = employees.getEmployees();
+        for (Employee e : tmp) {
             BusinessLogic.insert(e);
         }
     }
 
     public static void importFromTXT(File file) {
-        List<Employee> tmp = Employee.listFromTXT(file);
+        Employees tmp = new  Employees(file);
         BusinessLogic.insertAll(tmp);
-        System.out.println("out importFromTXT");
     }
 
     public static void exportToXML(File file) throws Exception {
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         BusinessLogic.exportFromDB();
-        xmlMapper.writeValue(file, employeeList);
+        xmlMapper.writeValue(file, employees);
     }
 
     public static void insert(String name, String job, int age, double salary, int afID){
@@ -179,8 +179,8 @@ public final class BusinessLogic {
         }
     }
 
-    public static List<Employee> searchByPhone(String phone) {
-        List<Employee> tmp = new ArrayList<>();
+    public static Employees searchByPhone(String phone) {
+        Employees tmp;
         try {
             preparedStatement = connection.prepareStatement(
                     "SELECT *\n" +
@@ -192,7 +192,7 @@ public final class BusinessLogic {
                             "                    a.phone = ?)");
             preparedStatement.setString(1, phone);
             ResultSet rs = preparedStatement.executeQuery();
-            tmp = Employee.listFromResultSet(rs);
+            tmp = new Employees(rs);
             preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException("searchByPhone");

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdditionalInfo {
+final class AdditionalInfo {
     private int id;
     private String phone;
     private String adress;
