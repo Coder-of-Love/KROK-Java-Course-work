@@ -36,6 +36,10 @@ public class UserInterface {
                 case "phone":
                     userSearchByPhone();
                     break;
+                case "5":
+                case "stats":
+                    userStats();
+                    break;
                 case "6":
                 case "all":
                     userViewAll();
@@ -75,7 +79,7 @@ public class UserInterface {
     private static void userSpecify() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите id сотрудника для которого хотите добавить дополнительную информацию..");
-        int id = scanner.nextInt();
+        int id = Integer.parseInt(scanner.nextLine());
         Employee employee = BusinessLogic.getEmployeeById(id);
         int afID = employee.getAfID();
         if (afID == 0) {
@@ -123,6 +127,13 @@ public class UserInterface {
         } else {
             System.out.println("При экспорте произошла ошибка! Смотрите подробности в логе..");
         }
+    }
+
+    private static void userStats(){
+        System.out.println("Введите должность для которой хотите узнать статистику..");
+        String job = new Scanner(System.in).nextLine();
+        System.out.println("Средняя зарплата по должности " + job +" равна " + BusinessLogic.getAverageSalary(job));
+        System.out.println("Средняя зарплата в общем равна " + BusinessLogic.getAverageSalary());
     }
 
 }
