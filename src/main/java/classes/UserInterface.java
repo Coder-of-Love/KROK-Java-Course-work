@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class UserInterface {
 
-    public static void init(){
+    public void init(){
         BusinessLogic.connect();
         Scanner scanner = new Scanner(System.in);
         String cmd;
@@ -54,7 +54,7 @@ public class UserInterface {
 
     }
 
-    private static void showMainMenu(){
+    private void showMainMenu(){
         System.out.println("Введите команду..");
         System.out.println("0 или exit для выхода");
         System.out.println("1 или insert для добавления сотрудника");
@@ -66,7 +66,7 @@ public class UserInterface {
         System.out.println("7 или xml для экспорта данных бд в файл \"employees.xml\"");
     }
 
-    private static void userInsert() {
+    private void userInsert() {
         System.out.println("Через пробел введите id, имя, должность, возраст, зарплату и afID");
         int resIns = BusinessLogic.insert(new Employee(new Scanner(System.in).nextLine()));
         if (resIns == 0) {
@@ -76,7 +76,7 @@ public class UserInterface {
         }
     }
 
-    private static void userSpecify() {
+    private void userSpecify() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите id сотрудника для которого хотите добавить дополнительную информацию..");
         int id = Integer.parseInt(scanner.nextLine());
@@ -101,7 +101,7 @@ public class UserInterface {
         }
     }
 
-    private static void userDelete() {
+    private void userDelete() {
         System.out.println("Введите id сотрудника которого хотите удалить..");
         int resDel = BusinessLogic.deleteEmployee(new Scanner(System.in).nextInt());
         if (resDel == 0) {
@@ -111,16 +111,16 @@ public class UserInterface {
         }
     }
 
-    private static void userSearchByPhone() {
+    private void userSearchByPhone() {
         System.out.println("Введите номер телефона сотрудника которого хотите найти..");
         System.out.println(BusinessLogic.searchEmployeeByPhone(new Scanner(System.in).nextLine()));
     }
 
-    private static void userViewAll() {
+    private void userViewAll() {
         System.out.println(BusinessLogic.viewAll());
     }
 
-    private static void userExportToXML(){
+    private void userExportToXML(){
         int resExp = BusinessLogic.exportToXML(new File("employees.xml"));
         if (resExp == 0) {
             System.out.println("Данные успешно экспортированы!");
@@ -129,7 +129,7 @@ public class UserInterface {
         }
     }
 
-    private static void userStats(){
+    private void userStats(){
         System.out.println("Введите должность для которой хотите узнать статистику..");
         String job = new Scanner(System.in).nextLine();
         System.out.println("Средняя зарплата по должности " + job +" равна " + BusinessLogic.getAverageSalary(job));

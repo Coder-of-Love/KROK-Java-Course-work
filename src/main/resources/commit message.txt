@@ -1,5 +1,1 @@
-Add "Stats" option to UI
-
-Fix "Specify" option to UI
-
-Test UI manually
+Make "UserInterface" class not static
