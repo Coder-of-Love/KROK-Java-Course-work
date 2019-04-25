@@ -1,1 +1,1 @@
-Make "UserInterface" class not static
+Refactor "UserInterface" Class

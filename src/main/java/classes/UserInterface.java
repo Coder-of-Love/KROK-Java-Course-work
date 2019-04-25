@@ -5,9 +5,10 @@ import java.util.Scanner;
 
 public class UserInterface {
 
+    private Scanner scanner = new Scanner(System.in);
+
     public void init(){
         BusinessLogic.connect();
-        Scanner scanner = new Scanner(System.in);
         String cmd;
         boolean running = true;
 
@@ -68,7 +69,7 @@ public class UserInterface {
 
     private void userInsert() {
         System.out.println("Через пробел введите id, имя, должность, возраст, зарплату и afID");
-        int resIns = BusinessLogic.insert(new Employee(new Scanner(System.in).nextLine()));
+        int resIns = BusinessLogic.insert(new Employee(scanner.nextLine()));
         if (resIns == 0) {
             System.out.println("Сотрудник успешно добавлен!");
         } else {
@@ -77,7 +78,6 @@ public class UserInterface {
     }
 
     private void userSpecify() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Введите id сотрудника для которого хотите добавить дополнительную информацию..");
         int id = Integer.parseInt(scanner.nextLine());
         Employee employee = BusinessLogic.getEmployeeById(id);
@@ -103,7 +103,7 @@ public class UserInterface {
 
     private void userDelete() {
         System.out.println("Введите id сотрудника которого хотите удалить..");
-        int resDel = BusinessLogic.deleteEmployee(new Scanner(System.in).nextInt());
+        int resDel = BusinessLogic.deleteEmployee(scanner.nextInt());
         if (resDel == 0) {
             System.out.println("Сотрудник успешно удален!");
         } else {
@@ -113,7 +113,7 @@ public class UserInterface {
 
     private void userSearchByPhone() {
         System.out.println("Введите номер телефона сотрудника которого хотите найти..");
-        System.out.println(BusinessLogic.searchEmployeeByPhone(new Scanner(System.in).nextLine()));
+        System.out.println(BusinessLogic.searchEmployeeByPhone(scanner.nextLine()));
     }
 
     private void userViewAll() {
@@ -131,7 +131,7 @@ public class UserInterface {
 
     private void userStats(){
         System.out.println("Введите должность для которой хотите узнать статистику..");
-        String job = new Scanner(System.in).nextLine();
+        String job = scanner.nextLine();
         System.out.println("Средняя зарплата по должности " + job +" равна " + BusinessLogic.getAverageSalary(job));
         System.out.println("Средняя зарплата в общем равна " + BusinessLogic.getAverageSalary());
     }

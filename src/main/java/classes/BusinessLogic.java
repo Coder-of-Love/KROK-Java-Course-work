@@ -1,6 +1,6 @@
 /*
 toDo:
-   - Консольное приложение
+   -(Готово) Консольное приложение
    -(Готово) Импорт из БД в память (в List объектов соответствующего типа)
    -(Готово) Импорт из txt файла
    -(Готово) Добавление сотрудника в БД
@@ -29,11 +29,11 @@ public final class BusinessLogic {
     private static Statement statement;
     private static PreparedStatement preparedStatement;
 
-    public static Employees employees;
-    public static List<AdditionalInfo> additionalInfoList = new ArrayList<>();
+    private static Employees employees;
+    private static List<AdditionalInfo> additionalInfoList = new ArrayList<>();
 
     //___While connected___
-    public static void exportFromDB(){
+    static void exportFromDB(){
         try {
             statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM Employees");
@@ -48,19 +48,19 @@ public final class BusinessLogic {
         }
     }
 
-    public static void insertAll(Employees employees) {
+    static void insertAll(Employees employees) {
         List<Employee> tmp = employees.getEmployees();
         for (Employee e : tmp) {
             BusinessLogic.insert(e);
         }
     }
 
-    public static void importFromTXT(File file) {
+    static void importFromTXT(File file) {
         Employees tmp = new  Employees(file);
         BusinessLogic.insertAll(tmp);
     }
 
-    public static int exportToXML(File file) {
+    static int exportToXML(File file) {
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         BusinessLogic.exportFromDB();
@@ -72,7 +72,7 @@ public final class BusinessLogic {
         return 0;
     }
 
-    public static int insert(String name, String job, int age, double salary, int afID){
+    static int insert(String name, String job, int age, double salary, int afID){
         try {
             preparedStatement = connection.prepareStatement("INSERT INTO Employees (name, job, age, salary, afID)" +
                     "VALUES (?, ?, ?, ?, ?)");
@@ -89,7 +89,7 @@ public final class BusinessLogic {
         return 0;
     }
 
-    public static int insert(Employee employee){
+    static int insert(Employee employee){
         try {
             preparedStatement = connection.prepareStatement("SELECT * FROM Employees WHERE id = ?");
             preparedStatement.setInt(1, employee.getId());
@@ -112,7 +112,7 @@ public final class BusinessLogic {
         return 0;
     }
 
-    public static int insert(String phone, String adress) {
+    static int insert(String phone, String adress) {
         try {
             preparedStatement = connection.prepareStatement("INSERT INTO AdditionalInfo (phone, adress) " +
                                                                                             "VALUES (?, ?)");
@@ -126,7 +126,7 @@ public final class BusinessLogic {
         return 0;
     }
 
-    public static int insert(AdditionalInfo additionalInfo) {
+    static int insert(AdditionalInfo additionalInfo) {
         try {
             preparedStatement = connection.prepareStatement("SELECT * FROM AdditionalInfo WHERE id = ?");
             preparedStatement.setInt(1, additionalInfo.getId());
@@ -172,7 +172,7 @@ public final class BusinessLogic {
         return 0;
     }
 
-    public static Employee getEmployeeById(int id){
+    static Employee getEmployeeById(int id){
         BusinessLogic.exportFromDB();
         List<Employee> tmp = employees.getEmployees();
         for (Employee e : tmp) {
@@ -183,7 +183,7 @@ public final class BusinessLogic {
         return null;
     }
 
-    public static AdditionalInfo getAdditionalInfoById(int id) {
+    static AdditionalInfo getAdditionalInfoById(int id) {
         BusinessLogic.exportFromDB();
         for (AdditionalInfo a : additionalInfoList) {
             if (a.getId() == id) {
@@ -193,7 +193,7 @@ public final class BusinessLogic {
         return null;
     }
 
-    public static void bindEmployeeToAdditionalInfo(int id, int afID) {
+    static void bindEmployeeToAdditionalInfo(int id, int afID) {
         try {
             preparedStatement = connection.prepareStatement("UPDATE Employees SET afID = ? WHERE id = ?");
             preparedStatement.setInt(1, afID);
@@ -205,7 +205,7 @@ public final class BusinessLogic {
         }
     }
 
-    public static double getAverageSalary(String job) {
+    static double getAverageSalary(String job) {
         try {
             preparedStatement = connection.prepareStatement("SELECT AVG(salary) FROM Employees WHERE job = ?");
             preparedStatement.setString(1, job);
@@ -217,7 +217,7 @@ public final class BusinessLogic {
         }
     }
 
-    public static double getAverageSalary() {
+    static double getAverageSalary() {
         try {
             statement = connection.createStatement();
             double result = statement.executeQuery("SELECT AVG(salary) FROM Employees").getDouble(1);
@@ -228,7 +228,7 @@ public final class BusinessLogic {
         }
     }
 
-    public static String viewAll() {
+    static String viewAll() {
         BusinessLogic.exportFromDB();
         StringBuilder sb = new StringBuilder();
         List<Employee> tmp = employees.getEmployees();
@@ -242,7 +242,7 @@ public final class BusinessLogic {
         return sb.toString();
     }
 
-    public static Employees searchEmployeeByPhone(String phone) {
+    static Employees searchEmployeeByPhone(String phone) {
         Employees tmp;
         try {
             preparedStatement = connection.prepareStatement(

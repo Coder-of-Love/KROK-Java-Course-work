@@ -1,13 +1,5 @@
 <Employees>
   <Employee>
-    <id>1</id>
-    <name>test</name>
-    <job>tj</job>
-    <age>5</age>
-    <salary>100.0</salary>
-    <afID>1</afID>
-  </Employee>
-  <Employee>
     <id>2</id>
     <name>test2</name>
     <job>tj2</job>
@@ -32,6 +24,14 @@
     <afID>0</afID>
   </Employee>
   <Employee>
+    <id>8</id>
+    <name>testConsole</name>
+    <job>tj</job>
+    <age>33</age>
+    <salary>456.0</salary>
+    <afID>8</afID>
+  </Employee>
+  <Employee>
     <id>55</id>
     <name>testEmp</name>
     <job>qs</job>
@@ -46,6 +46,14 @@
     <age>111</age>
     <salary>0.55</salary>
     <afID>0</afID>
+  </Employee>
+  <Employee>
+    <id>64</id>
+    <name>Bob</name>
+    <job>qs</job>
+    <age>55</age>
+    <salary>400.0</salary>
+    <afID>64</afID>
   </Employee>
   <Employee>
     <id>111</id>
